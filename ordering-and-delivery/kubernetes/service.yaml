@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordering-and-delivery
+  labels:
+    app: ordering-and-delivery
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: ordering-and-delivery

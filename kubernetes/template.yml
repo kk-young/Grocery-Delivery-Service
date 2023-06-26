@@ -1,0 +1,171 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-and-delivery
+  labels:
+    app: ordering-and-delivery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordering-and-delivery
+  template:
+    metadata:
+      labels:
+        app: ordering-and-delivery
+    spec:
+      containers:
+        - name: ordering-and-delivery
+          image: username/ordering-and-delivery:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-accounts
+  labels:
+    app: user-accounts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-accounts
+  template:
+    metadata:
+      labels:
+        app: user-accounts
+    spec:
+      containers:
+        - name: user-accounts
+          image: username/user-accounts:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delivery-driver-management
+  labels:
+    app: delivery-driver-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delivery-driver-management
+  template:
+    metadata:
+      labels:
+        app: delivery-driver-management
+    spec:
+      containers:
+        - name: delivery-driver-management
+          image: username/delivery-driver-management:latest
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+          livenessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 5
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordering-and-delivery
+  labels:
+    app: ordering-and-delivery
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: ordering-and-delivery
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-accounts
+  labels:
+    app: user-accounts
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: user-accounts
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-driver-management
+  labels:
+    app: delivery-driver-management
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: delivery-driver-management
+

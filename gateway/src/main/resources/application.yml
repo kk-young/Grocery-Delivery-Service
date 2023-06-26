@@ -1,0 +1,74 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: ordering-and-delivery
+          uri: http://localhost:8082
+          predicates:
+            - Path=/customers/**, /deliveryDrivers/**, /groceryItems/**, 
+        - id: user-accounts
+          uri: http://localhost:8083
+          predicates:
+            - Path=/deliveryDriverProfiles/**, 
+        - id: delivery-driver-management
+          uri: http://localhost:8085
+          predicates:
+            - Path=/deliveryDrivers/**, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: ordering-and-delivery
+          uri: http://orderingAndDelivery:8080
+          predicates:
+            - Path=/customers/**, /deliveryDrivers/**, /groceryItems/**, 
+        - id: user-accounts
+          uri: http://userAccounts:8080
+          predicates:
+            - Path=/deliveryDriverProfiles/**, 
+        - id: delivery-driver-management
+          uri: http://deliveryDriverManagement:8080
+          predicates:
+            - Path=/deliveryDrivers/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
